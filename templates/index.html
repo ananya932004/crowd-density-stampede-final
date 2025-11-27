@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Crowd Density & Stamped Prediction</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Crowd Density & Stampede Prediction</h1>
+
+      <section class="upload">
+        <label for="capacity">Capacity limit (people):</label>
+        <input id="capacity" type="number" value="50" min="1" />
+
+  <label><input id="highAccuracy" type="checkbox" /> High accuracy mode (slower)</label>
+
+  <label><input id="useDensity" type="checkbox" /> Use density estimator (CSRNet)</label>
+
+  <div id="advanced" style="display:none; margin-top:8px;">
+          <label for="modelName">Model:</label>
+          <select id="modelName">
+            <option value="yolov8n.pt">yolov8n (fast)</option>
+            <option value="yolov8l.pt">yolov8l (better)</option>
+            <option value="yolov8x.pt">yolov8x (best)</option>
+          </select>
+          <label for="imgsz">Image size (long side):</label>
+          <input id="imgsz" type="number" value="1280" />
+          <label for="conf">Confidence threshold:</label>
+          <input id="conf" type="number" step="0.05" value="0.25" />
+          <label for="nms">NMS IoU:</label>
+          <input id="nms" type="number" step="0.05" value="0.45" />
+          <label for="tileSize">Tile size (px):</label>
+          <input id="tileSize" type="number" value="1024" />
+          <label for="overlap">Tile overlap (0-0.5):</label>
+          <input id="overlap" type="number" step="0.05" value="0.2" />
+          <label for="densityThreshold">Run density when YOLO people &gt;=</label>
+          <input id="densityThreshold" type="number" value="30" min="1" />
+        </div>
+
+        <form id="uploadForm">
+          <input type="file" id="imageInput" name="image" accept="image/*" />
+          <button type="submit">Upload & Analyze</button>
+        </form>
+      </section>
+
+      <section class="results">
+        <h2>Results</h2>
+        <div id="alertBox" class="alert"></div>
+        <div id="counts"></div>
+        <div id="dashboard">
+          <canvas id="annotatedCanvas"></canvas>
+        </div>
+        <div id="heatmap" style="margin-top:12px"></div>
+      </section>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
