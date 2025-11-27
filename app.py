@@ -119,7 +119,7 @@ def upload():
         effective_people_f = 0.0
 
     risk = effective_people_f > float(capacity)
-    message = ("(stampade chances are hight ,take action)" if risk else "Within safe capacity")
+    message = ("stampade chances are high, take action" if risk else "Within safe capacity")
 
     img_b64 = "data:image/png;base64," + base64.b64encode(annotated_png).decode()
     elapsed_ms = int((time.time() - start_time) * 1000)
