@@ -43,19 +43,21 @@ def upload():
     save_path = UPLOAD_DIR / file.filename
     file.save(save_path)
 
-    # Read advanced options
+    # Read essential options from form
     high_accuracy = request.form.get('high_accuracy', '0') in ('1', 'true', 'True')
-    model_name = request.form.get('model_name', 'yolov8n.pt')
-    imgsz = request.form.get('imgsz', type=int)
-    conf = request.form.get('conf', type=float) or 0.25
-    nms_iou = request.form.get('nms_iou', type=float) or 0.45
-    tiling = request.form.get('tiling', '0') in ('1', 'true', 'True')
-    tile_size = request.form.get('tile_size', type=int) or 1024
-    overlap = request.form.get('overlap', type=float) or 0.2
+    use_density = request.form.get('use_density', '0') in ('1', 'true', 'True')
 
-    # If high_accuracy requested but tiling not explicitly set, enable tiling
-    if high_accuracy and not tiling:
-        tiling = True
+    # Set defaults for all detection parameters (hardcoded, no UI exposure)
+    model_name = 'yolov8n.pt'
+    imgsz = 1280
+    conf = 0.25
+    nms_iou = 0.45
+    tile_size = 1024
+    overlap = 0.2
+    density_threshold = 30.0
+    
+    # Enable tiling when high_accuracy is requested
+    tiling = high_accuracy
 
     start_time = time.time()
     try:
@@ -77,19 +79,15 @@ def upload():
         weights_present = density_mod.weights_present()
     except Exception:
         weights_present = False
-
     density_used = False
     density_reason = None
 
     if high_accuracy:
-        # decide whether to run density based on user toggle or threshold
-        use_density_flag = request.form.get('use_density', '0') in ('1', 'true', 'True')
-        density_threshold = request.form.get('density_threshold', type=float) or 30.0
         # run density if user requested or YOLO count >= threshold
-        run_density = use_density_flag or (people_count_det >= density_threshold)
+        run_density = use_density or (people_count_det >= density_threshold)
         if run_density and weights_present:
             density_used = True
-            density_reason = 'user' if use_density_flag else 'threshold'
+            density_reason = 'user' if use_density else 'threshold'
             try:
                 pil = Image.open(save_path).convert('RGB')
                 # use smaller side for faster CPU inference

@@ -3,56 +3,64 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Crowd Density & Stamped Prediction</title>
+    <title>Crowd Density & Stampede Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
+    <div class="navbar">
+      <div class="navbar-brand"><i class="fas fa-users"></i> Crowd & Stampede Detection</div>
+    </div>
+
     <div class="container">
-      <h1>Crowd Density & Stampede Prediction</h1>
-
-      <section class="upload">
-        <label for="capacity">Capacity limit (people):</label>
-        <input id="capacity" type="number" value="50" min="1" />
-
-  <label><input id="highAccuracy" type="checkbox" /> High accuracy mode (slower)</label>
-
-  <label><input id="useDensity" type="checkbox" /> Use density estimator (CSRNet)</label>
-
-  <div id="advanced" style="display:none; margin-top:8px;">
-          <label for="modelName">Model:</label>
-          <select id="modelName">
-            <option value="yolov8n.pt">yolov8n (fast)</option>
-            <option value="yolov8l.pt">yolov8l (better)</option>
-            <option value="yolov8x.pt">yolov8x (best)</option>
-          </select>
-          <label for="imgsz">Image size (long side):</label>
-          <input id="imgsz" type="number" value="1280" />
-          <label for="conf">Confidence threshold:</label>
-          <input id="conf" type="number" step="0.05" value="0.25" />
-          <label for="nms">NMS IoU:</label>
-          <input id="nms" type="number" step="0.05" value="0.45" />
-          <label for="tileSize">Tile size (px):</label>
-          <input id="tileSize" type="number" value="1024" />
-          <label for="overlap">Tile overlap (0-0.5):</label>
-          <input id="overlap" type="number" step="0.05" value="0.2" />
-          <label for="densityThreshold">Run density when YOLO people &gt;=</label>
-          <input id="densityThreshold" type="number" value="30" min="1" />
+      <section class="upload-card">
+        <div class="upload-header">
+          <h2><i class="fas fa-cloud-upload-alt"></i> Upload & Analyze</h2>
         </div>
+        
+        <div class="upload-body">
+          <div class="form-group">
+            <label for="capacity"><i class="fas fa-gauge"></i> Capacity Limit (people):</label>
+            <input id="capacity" type="number" value="50" min="1" class="input-field" />
+          </div>
 
-        <form id="uploadForm">
-          <input type="file" id="imageInput" name="image" accept="image/*" />
-          <button type="submit">Upload & Analyze</button>
-        </form>
+          <div class="form-group checkbox-group">
+            <label><input id="highAccuracy" type="checkbox" class="checkbox-input" /> <i class="fas fa-bolt"></i> High accuracy mode (slower)</label>
+            <label><input id="useDensity" type="checkbox" class="checkbox-input" /> <i class="fas fa-layer-group"></i> Use density estimator (CSRNet)</label>
+          </div>
+
+          <form id="uploadForm" class="upload-form">
+            <div class="file-input-wrapper">
+              <label for="imageInput" class="file-label">
+                <i class="fas fa-image"></i> Choose Image
+              </label>
+              <input type="file" id="imageInput" name="image" accept="image/*" class="hidden-file-input" />
+              <span id="fileName" class="file-name">No file selected</span>
+            </div>
+            <button type="submit" class="btn-primary"><i class="fas fa-play-circle"></i> Upload & Analyze</button>
+          </form>
+        </div>
       </section>
 
-      <section class="results">
-        <h2>Results</h2>
+      <section class="results-section" id="resultsSection" style="display:none;">
+        <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+        
         <div id="alertBox" class="alert"></div>
-        <div id="counts"></div>
-        <div id="dashboard">
-          <canvas id="annotatedCanvas"></canvas>
+        
+        <div class="results-grid">
+          <div class="card stats-card">
+            <div id="counts" class="counts-container"></div>
+          </div>
+          
+          <div class="card image-card">
+            <h3><i class="fas fa-camera"></i> Annotated Image</h3>
+            <div id="dashboard" class="dashboard">
+              <canvas id="annotatedCanvas"></canvas>
+            </div>
+          </div>
         </div>
-        <div id="heatmap" style="margin-top:12px"></div>
+        
+        <div id="heatmap" class="card heatmap-card" style="margin-top:20px; display:none;"></div>
       </section>
     </div>
 

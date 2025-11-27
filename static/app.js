@@ -5,6 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const countsDiv = document.getElementById('counts');
   const alertBox = document.getElementById('alertBox');
   const canvas = document.getElementById('annotatedCanvas');
+  const resultsSection = document.getElementById('resultsSection');
+  const fileNameSpan = document.getElementById('fileName');
+
+  // Update file name when file is selected
+  imageInput.addEventListener('change', () => {
+    if (imageInput.files.length > 0) {
+      fileNameSpan.textContent = imageInput.files[0].name;
+    } else {
+      fileNameSpan.textContent = 'No file selected';
+    }
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -22,22 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const highAccuracy = document.getElementById('highAccuracy').checked;
     const useDensity = document.getElementById('useDensity').checked;
-    const densityThreshold = parseInt(document.getElementById('densityThreshold').value || '30', 10);
     fd.append('high_accuracy', highAccuracy ? '1' : '0');
-    if (highAccuracy) {
-      fd.append('model_name', document.getElementById('modelName').value);
-      fd.append('imgsz', document.getElementById('imgsz').value);
-      fd.append('conf', document.getElementById('conf').value);
-      fd.append('nms_iou', document.getElementById('nms').value);
-      fd.append('tile_size', document.getElementById('tileSize').value);
-      fd.append('overlap', document.getElementById('overlap').value);
-      fd.append('tiling', '1');
-      fd.append('use_density', useDensity ? '1' : '0');
-      fd.append('density_threshold', densityThreshold.toString());
-    }
+    fd.append('use_density', useDensity ? '1' : '0');
 
     alertBox.textContent = 'Analyzing...';
     countsDiv.innerHTML = '';
+    resultsSection.style.display = 'block';
 
     try {
       const res = await fetch('/upload', { method: 'POST', body: fd });
