@@ -15,7 +15,13 @@ Simple Flask web app to upload an image, detect objects (people, cars, cats, etc
 
 2. Run the app:
 
-   ```powershell
+   ```python3 --version 
+   python3 -m venv .venv 
+   source .venv/bin/activate 
+   pip install -r requirements.txt 
+   flask run --port=5002
+
+   powershell
    python app.py
    ```
 
